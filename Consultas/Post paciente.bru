@@ -1,0 +1,45 @@
+meta {
+  name: Post paciente
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/pacientes
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpYWdvQGV4YW1wbGUuY29tIiwidGlwbyI6IkRFRkFVTFQiLCJpYXQiOjE3NjQwMDM4OTQsImV4cCI6MTc2NDAwNzQ5NH0.JFWHrOb46IJ3MCZAz8RWUZLLqlSHuv3bls7g2F98mro
+}
+
+body:json {
+  {
+    "pacienteCpf": "12345678901",
+    "pacienteNome": "Ana Carolina Santos",
+    "pacienteEmail": "ana.santos@email.com",
+    "pacienteTelefone": "71912345678",
+    "dataNascimento": "1992-07-20",
+    "endereco": {
+      "estado": "SP",
+      "cidade": "São Paulo",
+      "bairro": "Moema",
+      "cep": "04089000",
+      "rua": "Av. Ibirapuera",
+      "numero": "1500"
+    },
+    "responsavel": {
+      "cpf": "98765432100",
+      "nome": "Carlos Alberto Santos",
+      "dataNascimento": "1965-03-12",
+      "email": "carlos.santos@email.com",
+      "telefone": "11987654321"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
