@@ -13,4 +13,4 @@ public record AtendimentoResponse(
         String planNumber,
         String usuarioNome,
         BigDecimal valorTotal
-) { }
+) {}

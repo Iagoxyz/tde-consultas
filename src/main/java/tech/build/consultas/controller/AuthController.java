@@ -10,6 +10,7 @@ import tech.build.consultas.controller.dto.AuthRequest;
 import tech.build.consultas.controller.dto.AuthResponse;
 import tech.build.consultas.controller.dto.UsuarioResponse;
 import tech.build.consultas.entities.Usuario;
+import tech.build.consultas.exceptions.ErroResponse;
 import tech.build.consultas.service.AuthService;
 
 @RestController
@@ -42,16 +43,22 @@ public class AuthController {
         }
     }
 
-    // 🔹 Endpoint para login
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
         try {
             String token = authService.login(request);
             return ResponseEntity.ok(new AuthResponse(token));
+
         } catch (RuntimeException e) {
+            ErroResponse erro = new ErroResponse(
+                    "Erro de autenticação: " + e.getMessage(),
+                    HttpStatus.UNAUTHORIZED.value()
+            );
+
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("Erro de autenticação: " + e.getMessage());
+                    .body(erro);
         }
     }
 }

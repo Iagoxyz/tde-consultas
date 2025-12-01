@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,12 +21,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getServletPath();
 
-        // Ignora rotas públicas
+        // Rotas públicas
         if (path.startsWith("/auth")) {
             filterChain.doFilter(request, response);
             return;
@@ -39,12 +40,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = authHeader.substring(7);
-        String email = jwtService.validarToken(token);
+
+        if (!jwtService.tokenValido(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String email = jwtService.getEmailFromToken(token);
+        String tipo = jwtService.getTipoFromToken(token);
+
+        // Cria autoridade: ROLE_ADMIN ou ROLE_DEFAULT
+        SimpleGrantedAuthority authority =
+                new SimpleGrantedAuthority("ROLE_" + tipo.toUpperCase());
 
         UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(email, null, List.of());
+                new UsernamePasswordAuthenticationToken(email, null, List.of(authority));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         filterChain.doFilter(request, response);
     }
 }

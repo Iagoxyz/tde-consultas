@@ -1,0 +1,20 @@
+meta {
+  name: GET findAll
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:8080/api/usuarios/all
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpYWdvQGV4YW1wbGUuY29tIiwidGlwbyI6IkFETUlOIiwiaWF0IjoxNzY0MjQ0MDQ3LCJleHAiOjE3NjQyNDc2NDd9.p5pJnC7DpVIXoLGcirk1Yz06N6nbG3QV6Jk2t6S8Hm8
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

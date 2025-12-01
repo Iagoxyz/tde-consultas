@@ -1,0 +1,24 @@
+meta {
+  name: GET find by email
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:8080/api/usuarios?email=iago@example.com
+  body: json
+  auth: inherit
+}
+
+params:query {
+  email: iago@example.com
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpYWdvQGV4YW1wbGUuY29tIiwidGlwbyI6IkFETUlOIiwiaWF0IjoxNzY0MjQ1NzA4LCJleHAiOjE3NjQyNDkzMDh9.01VIA5a7J8NjGUiqf51Rs-gvrbgWfbG6zpTRs5NoS8k
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

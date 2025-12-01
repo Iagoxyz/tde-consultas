@@ -24,7 +24,7 @@ public class SecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll() // login/registro não precisa de token
-                        .anyRequest().authenticated() // tudo resto precisa
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JwtAuthFilter(jwtService), UsernamePasswordAuthenticationFilter.class)
                 .build();

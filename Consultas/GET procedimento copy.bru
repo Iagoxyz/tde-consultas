@@ -1,0 +1,20 @@
+meta {
+  name: GET procedimento copy
+  type: http
+  seq: 9
+}
+
+get {
+  url: http://localhost:8080/api/procedimentos
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpYWdvQGV4YW1wbGUuY29tIiwidGlwbyI6IkFETUlOIiwiaWF0IjoxNzY0MjQ1NzA4LCJleHAiOjE3NjQyNDkzMDh9.01VIA5a7J8NjGUiqf51Rs-gvrbgWfbG6zpTRs5NoS8k
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

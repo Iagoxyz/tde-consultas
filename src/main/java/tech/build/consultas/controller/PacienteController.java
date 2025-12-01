@@ -1,5 +1,8 @@
 package tech.build.consultas.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,30 +26,36 @@ public class PacienteController {
         this.pacienteService = pacienteService;
     }
 
+    // Criar paciente
     @PostMapping
     public ResponseEntity<PacienteResponse> criarPaciente(@RequestBody PacienteDTO pacienteDTO) {
         PacienteResponse novoPaciente = pacienteService.salvarPaciente(pacienteDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoPaciente);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PacienteResponseDTO> buscarPaciente(@PathVariable Long id) {
-        PacienteResponseDTO paciente = pacienteService.buscarPorId(id);
-        return ResponseEntity.ok(paciente);
+    // Atualizar paciente
+    @PutMapping("/{id}")
+    public ResponseEntity<PacienteResponse> atualizarPaciente(
+            @PathVariable Long id,
+            @RequestBody PacienteDTO dto
+    ) {
+        PacienteResponse atualizado = pacienteService.atualizar(id, dto);
+        return ResponseEntity.ok(atualizado);
     }
 
+    // Remover paciente
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarPaciente(@PathVariable Long id) {
         pacienteService.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<PacienteResponseDTO> atualizarPaciente(
-            @PathVariable Long id,
-            @RequestBody PacienteUpdateDTO dto
+    // Listar pacientes com paginação
+    @GetMapping
+    public ResponseEntity<Page<PacienteResponseDTO>> listarPacientes(
+            @PageableDefault(size = 10, sort = "pacienteId") Pageable pageable
     ) {
-        PacienteResponseDTO atualizado = pacienteService.atualizar(id, dto);
-        return ResponseEntity.ok(atualizado);
+        Page<PacienteResponseDTO> pagina = pacienteService.listar(pageable);
+        return ResponseEntity.ok(pagina);
     }
 }
