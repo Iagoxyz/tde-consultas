@@ -136,4 +136,11 @@ public class PacienteService {
         r.setTelefone(dto.telefone());
         return r;
     }
+
+    @Transactional(readOnly = true)
+    public PacienteResponse buscarPorId(Long id) {
+        Paciente paciente = pacienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Paciente não encontrado."));
+        return PacienteResponse.fromEntity(paciente);
+    }
 }

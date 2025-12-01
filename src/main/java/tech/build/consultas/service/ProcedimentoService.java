@@ -68,22 +68,6 @@ public class ProcedimentoService {
         return ProcedimentoResponseDTO.fromEntity(repository.save(procedimento));
     }
 
-    // Deletar
-    @Transactional
-    public void deletar(Long id) {
-        validarAdmin();
-
-        Procedimento procedimento = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Procedimento não encontrado."));
-
-        // Verificar se já foi usado em um atendimento
-        boolean usado = atendimentoRepository.existsByProcedimentoId(id);
-        if (usado) {
-            throw new RuntimeException("Não é possível remover: procedimento já utilizado em atendimentos.");
-        }
-
-        repository.delete(procedimento);
-    }
 
     public ProcedimentoResponseDTO buscarPorId(Long id) {
         return repository.findById(id)

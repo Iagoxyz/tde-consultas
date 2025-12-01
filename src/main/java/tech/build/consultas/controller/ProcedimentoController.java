@@ -37,11 +37,6 @@ public class ProcedimentoController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        service.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProcedimentoResponseDTO> buscar(@PathVariable Long id) {

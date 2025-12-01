@@ -50,6 +50,13 @@ public class PacienteController {
         return ResponseEntity.noContent().build();
     }
 
+    // Buscar paciente por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<PacienteResponse> buscarPorId(@PathVariable Long id) {
+        PacienteResponse response = pacienteService.buscarPorId(id);
+        return ResponseEntity.ok(response);
+    }
+
     // Listar pacientes com paginação
     @GetMapping
     public ResponseEntity<Page<PacienteResponseDTO>> listarPacientes(

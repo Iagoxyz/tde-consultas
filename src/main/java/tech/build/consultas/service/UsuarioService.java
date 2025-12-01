@@ -20,17 +20,20 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    // CONSULTAR POR EMAIL (restrito)
     @Transactional(readOnly = true)
     public UsuarioResponse buscarPorEmail(String emailConsulta, Authentication auth) {
-        // email do usuário autenticado
-        String emailLogado = auth.getName(); // o JwtAuthFilter configura o nome como email
-        Usuario usuarioLogado = usuarioRepository.findByEmail(emailLogado)
-                .orElseThrow(() -> new RuntimeException("Usuário autenticado não encontrado no sistema."));
 
-        // aqui ele vai verificar se o e-mail solicitado for diferente do do logado e o logado não for ADMIN
+        String emailLogado = auth.getName();
+
+        Usuario usuarioLogado = usuarioRepository.findByEmail(emailLogado)
+                .orElseThrow(() -> new RuntimeException("Usuário autenticado não encontrado."));
+
+        // Usuário só pode buscar ele mesmo
+        // ADMIN pode buscar qualquer um
         if (!usuarioLogado.getEmail().equalsIgnoreCase(emailConsulta)
                 && usuarioLogado.getTipo() != UsuarioTipo.ADMIN) {
-            throw new SecurityException("Acesso negado: somente admin pode consultar outro usuário.");
+            throw new SecurityException("Acesso negado: somente ADMIN pode consultar outros usuários.");
         }
 
         Usuario alvo = usuarioRepository.findByEmail(emailConsulta)
@@ -39,12 +42,13 @@ public class UsuarioService {
         return toResponse(alvo);
     }
 
-
+    // LISTAR PAGINADO (apenas ADMIN)
     @Transactional(readOnly = true)
     public Page<UsuarioResponse> listarUsuarios(Pageable pageable, Authentication auth) {
+
         String emailLogado = auth.getName();
         Usuario usuarioLogado = usuarioRepository.findByEmail(emailLogado)
-                .orElseThrow(() -> new RuntimeException("Usuário autenticado não encontrado no sistema."));
+                .orElseThrow(() -> new RuntimeException("Usuário autenticado não encontrado."));
 
         if (usuarioLogado.getTipo() != UsuarioTipo.ADMIN) {
             throw new SecurityException("Acesso negado: apenas ADMIN pode listar usuários.");
@@ -61,5 +65,5 @@ public class UsuarioService {
                 u.getTipo() != null ? u.getTipo().name() : null
         );
     }
-
 }
+
