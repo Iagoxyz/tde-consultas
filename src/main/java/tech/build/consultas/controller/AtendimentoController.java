@@ -1,5 +1,7 @@
 package tech.build.consultas.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +9,7 @@ import tech.build.consultas.controller.dto.AtendimentoDTO;
 import tech.build.consultas.controller.dto.AtendimentoResponse;
 import tech.build.consultas.service.AtendimentoService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -48,6 +51,26 @@ public class AtendimentoController {
     @GetMapping
     public ResponseEntity<List<AtendimentoResponse>> listar() {
         return ResponseEntity.ok(service.listar());
+    }
+
+    // -----------------------------------
+    // PAGINAÇÃO
+    // -----------------------------------
+    @GetMapping("/page")
+    public ResponseEntity<Page<AtendimentoResponse>> listarPaginado(Pageable pageable) {
+        return ResponseEntity.ok(service.listarPaginado(pageable));
+    }
+
+    // -----------------------------------
+    // FILTRO ENTRE DATAS
+    // -----------------------------------
+    @GetMapping("/buscar-entre-datas")
+    public ResponseEntity<Page<AtendimentoResponse>> buscarEntreDatas(
+            @RequestParam LocalDateTime inicio,
+            @RequestParam LocalDateTime fim,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(service.listarEntreDatas(inicio, fim, pageable));
     }
 }
 
